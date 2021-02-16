@@ -8,7 +8,7 @@ static const int rmaster            = 1;        /* 1 means master-area is initia
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char font[]            = { "Open Sans Bold 10" };
-static const char dmenufont[]       = "Open Sans:weight=bold:size=10";
+static const char dmenufont[]       = "Open Sans:weight=semibold:size=16";
 static const char col_gray1[]       = "#1d2021";
 static const char col_gray2[]       = "#3c3836";
 static const char col_gray3[]       = "#928374";
@@ -48,8 +48,9 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
-	{ NULL,       NULL,       "Picture-in-Picture", 0,  1,           -1 },
+	{ "Slack",    NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Spotify",  NULL,       NULL,       (1 << 7),     0,           -1 },
+	{ NULL,       NULL,       "Picture-in-Picture", ~0, 1,           -1 },
 };
 
 /* layout(s) */
@@ -77,8 +78,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_purple, "-sf", col_gray1, "-nhb", col_gray1, "-nhf", col_purple, "-shb", col_purple, "-shf", col_gray4, NULL };
-static const char *termcmd[]  = { "kitty", NULL };
+static const char *dmenucmd[] = { "dmenu_drun", "-i", "-m", dmenumon, "-l", "10", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_purple, "-sf", col_gray1, "-nhb", col_gray1, "-nhf", col_purple, "-shb", col_purple, "-shf", col_gray4, "-bw", "1", "-c", NULL };
+static const char *dmenupowercmd[] = { "dmenu_power", "-i", "-fn", dmenufont, "-l", "10", "-nb", col_gray1, "-nf", col_gray3, "-sb", col_purple, "-sf", col_gray1, "-nhb", col_gray1, "-nhf", col_purple, "-shb", col_purple, "-shf", col_gray4, "-bw", "1", "-c", NULL };
+static const char *dmenucalc[] = {"=", "--", "-fn", dmenufont, "-l", "10", "-nb", col_gray1, "-nf", col_gray3, "-sb", col_purple, "-sf", col_gray1, "-nhb", col_gray1, "-nhf", col_purple, "-shb", col_purple, "-shf", col_gray4, "-bw", "1", "-c", NULL };
+static const char *termcmd[]  = { "kitty", "--single-instance", NULL };
 static const char *firefox[]  = { "firefox", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "kitty", "--title", scratchpadname, NULL };
@@ -86,6 +89,8 @@ static const char *scratchpadcmd[] = { "kitty", "--title", scratchpadname, NULL 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenupowercmd } },
+	{ MODKEY,                       XK_c,      spawn,          {.v = dmenucalc } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY|ControlMask,           XK_Return, spawn,          {.v = firefox } },
 	{ MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
